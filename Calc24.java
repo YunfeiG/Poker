@@ -1,9 +1,12 @@
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Calc24{
-  private char operators[] = {'+','-','*','/'};
-  private double objective;
+  private static final char operators[] = {'+','-','*','/'};
+  private static double objective;
+  private Calculator calculator; 
   
   /* calculation of 2 numbers */
   private double compute(double a, double b, char operator){
@@ -64,8 +67,7 @@ public class Calc24{
     return expressions;
   }
 
-  private StringBuilder attempt(Deck draws){
-    int cards[] = {0,0,0,0};
+  private StringBuilder attempt(int[] cards){
     int num_expressions;
     int i,index;
     StringBuilder solution = new StringBuilder();
@@ -73,7 +75,6 @@ public class Calc24{
     //detect and remove repeatitives
     Map<Integer,Integer> map = new HashMap<Integer,Integer>();
     for(i=0;i<4;i++){
-      cards[i] = draws.draw().weight;
       if(map.get(cards[i])==null){
         map.put(cards[i],1);
       }
@@ -178,28 +179,93 @@ public class Calc24{
     }
     return solution;
   }
+  
+  /*validate user's answer*/
+  /*valid inputs:
+    integer operator integer operator integer operator integer
+    no negative integers, no float numbers
+    1st operator must be behind 1st integer
+    all integers must be either in 1 or 2 digits
+    */
+  private boolean validate(String expression, int[] cards){
+    int i;
+    //make sure user input same 4 integers as card drawn
+    String buffs[] = expression.split("[^0-9]+");
+    Set<Integer> set1 = new HashSet<Integer>();
+    Set<Integer> set2 = new HashSet<Integer>();
+    if(buffs==null) return false;
+    if(buffs[0].equals("")){
+      if(buffs.length!=5) return false;
+      buffs[0] = buffs[1];
+      buffs[1] = buffs[2];
+      buffs[2] = buffs[3];
+      buffs[3] = buffs[4];
+    }
+    else{
+      if(buffs.length!=4) return false;
+    }
+    
+    for(i=0;i<4;i++){
+      set1.add(cards[i]);
+      set2.add(Integer.parseInt(buffs[i]));
+    }
+    for(i=0;i<4;i++){
+      if(!set1.contains(Integer.parseInt(buffs[i]))) return false;
+      if(!set2.contains(cards[i])) return false;
+    }
+    //make sure user input 3 operators
+    buffs = expression.split("[^\\+^\\-^\\*^\\/]+");
+    if(buffs.length!=4) return false;
+    Set<Character> set3 = new HashSet<Character>();
+    for(i=0;i<4;i++) set3.add(operators[i]);
+    for(i=1;i<4;i++){
+      if(!set3.contains(buffs[i].charAt(0))) return false;
+    }
+    return true;
+  }
 
   /*constructor*/
   public Calc24(){
     Card c;
     int i;
     String solution;
+    String input;
+    BufferedReader reader;
+    
     Deck deck = new Deck(1,false);
     Deck draws = new Deck(0,false);
+    int cards[] = {0,0,0,0};
     objective = 24;
     deck.shuffle();
     for(i=0;i<4;i++){
-      draws.add(deck.draw());
+      c = deck.draw();
+      cards[i] = c.weight;
+      draws.add(c);
     }
     System.out.println("4 cards drawn:");
     System.out.println(draws.toString());
 
-    solution = attempt(draws).toString();
+    solution = attempt(cards).toString();
     if(solution.length()<=0){
       System.out.println("No solution");
     }
     else{
-      System.out.print(solution);
+      System.out.println("Can you get 24?");
+      reader = new BufferedReader(new InputStreamReader(System.in));
+      try{
+        input = reader.readLine();
+        if(validate(input,cards) && Calculator.executeExpression(input) == objective){
+          System.out.println("Correct!");
+        }
+        else{
+          System.out.println("Wrong. Here are solutions.");
+          System.out.print(solution);
+        }
+      }
+      catch(Exception e){
+        System.err.println("Invalid input. Here are solutions");
+        System.out.print(solution);
+      }
     }
   }
   
