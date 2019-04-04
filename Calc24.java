@@ -7,7 +7,9 @@ public class Calc24{
   private static final char operators[] = {'+','-','*','/'};
   private static double objective;
   private Calculator calculator; 
-  
+
+  private Vector<Card> deck;
+  private Vector<Card> draws;
   /* calculation of 2 numbers */
   private double compute(double a, double b, char operator){
     switch(operator){
@@ -67,7 +69,7 @@ public class Calc24{
     return expressions;
   }
 
-  private StringBuilder attempt(int[] cards){
+  private StringBuilder attempt(int[] weights){
     int num_expressions;
     int i,index;
     StringBuilder solution = new StringBuilder();
@@ -75,18 +77,18 @@ public class Calc24{
     //detect and remove repeatitives
     Map<Integer,Integer> map = new HashMap<Integer,Integer>();
     for(i=0;i<4;i++){
-      if(map.get(cards[i])==null){
-        map.put(cards[i],1);
+      if(map.get(weights[i])==null){
+        map.put(weights[i],1);
       }
       else{
-        map.put(cards[i],map.get(cards[i])+1);
+        map.put(weights[i],map.get(weights[i])+1);
       }
     }
     //how many possible expressions?
     switch(map.size()){
     case 1:
       //aaaa, 4 of a kind
-      solution.append(addOperators(cards[3],cards[3],cards[3],cards[3]));
+      solution.append(addOperators(weights[3],weights[3],weights[3],weights[3]));
       num_expressions = 1;
       break;
     case 2:
@@ -94,31 +96,31 @@ public class Calc24{
       index=0;
       for(Integer key : map.keySet()){
         if(map.get(key)==1){
-          cards[3] = key;
+          weights[3] = key;
           flag_a = true;
         }
         else if(map.get(key)==2){
-          cards[index++] = key;
-          cards[index++] = key;
+          weights[index++] = key;
+          weights[index++] = key;
         }
         else{
-          cards[index++] = key;
+          weights[index++] = key;
         }
       }
       if(flag_a){
-        solution.append(addOperators(cards[1],cards[1],cards[1],cards[3]));
-        solution.append(addOperators(cards[1],cards[1],cards[3],cards[1]));
-        solution.append(addOperators(cards[1],cards[3],cards[1],cards[1]));
-        solution.append(addOperators(cards[3],cards[1],cards[1],cards[1]));
+        solution.append(addOperators(weights[1],weights[1],weights[1],weights[3]));
+        solution.append(addOperators(weights[1],weights[1],weights[3],weights[1]));
+        solution.append(addOperators(weights[1],weights[3],weights[1],weights[1]));
+        solution.append(addOperators(weights[3],weights[1],weights[1],weights[1]));
         num_expressions = 16;
       }
       else{
-        solution.append(addOperators(cards[1],cards[1],cards[3],cards[3]));
-        solution.append(addOperators(cards[1],cards[3],cards[1],cards[3]));
-        solution.append(addOperators(cards[1],cards[3],cards[3],cards[1]));
-        solution.append(addOperators(cards[3],cards[1],cards[1],cards[3]));
-        solution.append(addOperators(cards[3],cards[1],cards[3],cards[1]));
-        solution.append(addOperators(cards[3],cards[3],cards[1],cards[1]));
+        solution.append(addOperators(weights[1],weights[1],weights[3],weights[3]));
+        solution.append(addOperators(weights[1],weights[3],weights[1],weights[3]));
+        solution.append(addOperators(weights[1],weights[3],weights[3],weights[1]));
+        solution.append(addOperators(weights[3],weights[1],weights[1],weights[3]));
+        solution.append(addOperators(weights[3],weights[1],weights[3],weights[1]));
+        solution.append(addOperators(weights[3],weights[3],weights[1],weights[1]));
         num_expressions = 36;
       }
       break;
@@ -127,53 +129,53 @@ public class Calc24{
       index=0;
       for(Integer key : map.keySet()){
         if(map.get(key)==2){
-          cards[2] = key;
-          cards[3] = key;
+          weights[2] = key;
+          weights[3] = key;
         }
         else{
-          cards[index++] = key;
+          weights[index++] = key;
         }
       }
-      solution.append(addOperators(cards[0],cards[1],cards[3],cards[3]));
-      solution.append(addOperators(cards[0],cards[3],cards[1],cards[3]));
-      solution.append(addOperators(cards[0],cards[3],cards[3],cards[1]));
-      solution.append(addOperators(cards[1],cards[0],cards[3],cards[3]));
-      solution.append(addOperators(cards[1],cards[3],cards[0],cards[3]));
-      solution.append(addOperators(cards[1],cards[3],cards[3],cards[0]));
-      solution.append(addOperators(cards[3],cards[0],cards[1],cards[3]));
-      solution.append(addOperators(cards[3],cards[0],cards[3],cards[1]));
-      solution.append(addOperators(cards[3],cards[1],cards[0],cards[3]));
-      solution.append(addOperators(cards[3],cards[1],cards[3],cards[0]));
-      solution.append(addOperators(cards[3],cards[3],cards[0],cards[1]));
-      solution.append(addOperators(cards[3],cards[3],cards[1],cards[0]));
+      solution.append(addOperators(weights[0],weights[1],weights[3],weights[3]));
+      solution.append(addOperators(weights[0],weights[3],weights[1],weights[3]));
+      solution.append(addOperators(weights[0],weights[3],weights[3],weights[1]));
+      solution.append(addOperators(weights[1],weights[0],weights[3],weights[3]));
+      solution.append(addOperators(weights[1],weights[3],weights[0],weights[3]));
+      solution.append(addOperators(weights[1],weights[3],weights[3],weights[0]));
+      solution.append(addOperators(weights[3],weights[0],weights[1],weights[3]));
+      solution.append(addOperators(weights[3],weights[0],weights[3],weights[1]));
+      solution.append(addOperators(weights[3],weights[1],weights[0],weights[3]));
+      solution.append(addOperators(weights[3],weights[1],weights[3],weights[0]));
+      solution.append(addOperators(weights[3],weights[3],weights[0],weights[1]));
+      solution.append(addOperators(weights[3],weights[3],weights[1],weights[0]));
       num_expressions = 96;
       break;
     default:
       //abcd, no pair
-      solution.append(addOperators(cards[0],cards[1],cards[2],cards[3]));
-      solution.append(addOperators(cards[0],cards[1],cards[3],cards[2]));
-      solution.append(addOperators(cards[0],cards[2],cards[1],cards[3]));
-      solution.append(addOperators(cards[0],cards[2],cards[3],cards[1]));
-      solution.append(addOperators(cards[0],cards[3],cards[1],cards[2]));
-      solution.append(addOperators(cards[0],cards[3],cards[2],cards[1]));
-      solution.append(addOperators(cards[1],cards[0],cards[2],cards[3]));
-      solution.append(addOperators(cards[1],cards[0],cards[3],cards[2]));
-      solution.append(addOperators(cards[1],cards[2],cards[0],cards[3]));
-      solution.append(addOperators(cards[1],cards[2],cards[3],cards[0]));
-      solution.append(addOperators(cards[1],cards[3],cards[0],cards[2]));
-      solution.append(addOperators(cards[1],cards[3],cards[2],cards[0]));
-      solution.append(addOperators(cards[2],cards[0],cards[1],cards[3]));
-      solution.append(addOperators(cards[2],cards[0],cards[3],cards[1]));
-      solution.append(addOperators(cards[2],cards[1],cards[0],cards[3]));
-      solution.append(addOperators(cards[2],cards[1],cards[3],cards[0]));
-      solution.append(addOperators(cards[2],cards[3],cards[0],cards[1]));
-      solution.append(addOperators(cards[2],cards[3],cards[1],cards[0]));
-      solution.append(addOperators(cards[3],cards[0],cards[1],cards[2]));
-      solution.append(addOperators(cards[3],cards[0],cards[2],cards[1]));
-      solution.append(addOperators(cards[3],cards[1],cards[0],cards[2]));
-      solution.append(addOperators(cards[3],cards[1],cards[2],cards[0]));
-      solution.append(addOperators(cards[3],cards[2],cards[0],cards[1]));
-      solution.append(addOperators(cards[3],cards[2],cards[1],cards[0]));
+      solution.append(addOperators(weights[0],weights[1],weights[2],weights[3]));
+      solution.append(addOperators(weights[0],weights[1],weights[3],weights[2]));
+      solution.append(addOperators(weights[0],weights[2],weights[1],weights[3]));
+      solution.append(addOperators(weights[0],weights[2],weights[3],weights[1]));
+      solution.append(addOperators(weights[0],weights[3],weights[1],weights[2]));
+      solution.append(addOperators(weights[0],weights[3],weights[2],weights[1]));
+      solution.append(addOperators(weights[1],weights[0],weights[2],weights[3]));
+      solution.append(addOperators(weights[1],weights[0],weights[3],weights[2]));
+      solution.append(addOperators(weights[1],weights[2],weights[0],weights[3]));
+      solution.append(addOperators(weights[1],weights[2],weights[3],weights[0]));
+      solution.append(addOperators(weights[1],weights[3],weights[0],weights[2]));
+      solution.append(addOperators(weights[1],weights[3],weights[2],weights[0]));
+      solution.append(addOperators(weights[2],weights[0],weights[1],weights[3]));
+      solution.append(addOperators(weights[2],weights[0],weights[3],weights[1]));
+      solution.append(addOperators(weights[2],weights[1],weights[0],weights[3]));
+      solution.append(addOperators(weights[2],weights[1],weights[3],weights[0]));
+      solution.append(addOperators(weights[2],weights[3],weights[0],weights[1]));
+      solution.append(addOperators(weights[2],weights[3],weights[1],weights[0]));
+      solution.append(addOperators(weights[3],weights[0],weights[1],weights[2]));
+      solution.append(addOperators(weights[3],weights[0],weights[2],weights[1]));
+      solution.append(addOperators(weights[3],weights[1],weights[0],weights[2]));
+      solution.append(addOperators(weights[3],weights[1],weights[2],weights[0]));
+      solution.append(addOperators(weights[3],weights[2],weights[0],weights[1]));
+      solution.append(addOperators(weights[3],weights[2],weights[1],weights[0]));
       num_expressions = 256;
       break;
     }
@@ -187,7 +189,7 @@ public class Calc24{
     1st operator must be behind 1st integer
     all integers must be either in 1 or 2 digits
     */
-  private boolean validate(String expression, int[] cards){
+  private boolean validate(String expression, int[] weights){
     int i;
     //make sure user input same 4 integers as card drawn
     String buffs[] = expression.split("[^0-9]+");
@@ -206,12 +208,12 @@ public class Calc24{
     }
     
     for(i=0;i<4;i++){
-      set1.add(cards[i]);
+      set1.add(weights[i]);
       set2.add(Integer.parseInt(buffs[i]));
     }
     for(i=0;i<4;i++){
       if(!set1.contains(Integer.parseInt(buffs[i]))) return false;
-      if(!set2.contains(cards[i])) return false;
+      if(!set2.contains(weights[i])) return false;
     }
     //make sure user input 3 operators
     buffs = expression.split("[^\\+^\\-^\\*^\\/]+");
@@ -232,20 +234,21 @@ public class Calc24{
     String input;
     BufferedReader reader;
     
-    Deck deck = new Deck(1,false);
-    Deck draws = new Deck(0,false);
-    int cards[] = {0,0,0,0};
+    deck = new Vector<Card>();
+    reload(1,false);
+    draws = new Vector<Card>();
+    int weights[] = {0,0,0,0};
     objective = 24;
-    deck.shuffle();
+    shuffle(deck);
     for(i=0;i<4;i++){
-      c = deck.draw();
-      cards[i] = c.weight;
+      c = deck.remove(1);
+      weights[i] = c.weight;
       draws.add(c);
     }
     System.out.println("4 cards drawn:");
     System.out.println(draws.toString());
 
-    solution = attempt(cards).toString();
+    solution = attempt(weights).toString();
     if(solution.length()<=0){
       System.out.println("No solution");
     }
@@ -254,7 +257,7 @@ public class Calc24{
       reader = new BufferedReader(new InputStreamReader(System.in));
       try{
         input = reader.readLine();
-        if(validate(input,cards) && Calculator.executeExpression(input) == objective){
+        if(validate(input,weights) && Calculator.executeExpression(input) == objective){
           System.out.println("Correct!");
         }
         else{
@@ -267,6 +270,41 @@ public class Calc24{
         System.out.print(solution);
       }
     }
+  }
+
+  public void reload(int sets, boolean joker){
+    if(sets<=0) return;
+    deck.clear();
+    int i,j,k;  
+    for(k=0;k<sets;k++){
+      for(i=0;i<4;i++){
+          for(j=0;j<13;j++){
+           deck.add(new Card(i,j,j+1));
+         }
+      }
+      if(joker){
+        deck.add(new Card(4,13,99)); //Grey joker
+        deck.add(new Card(5,14,99)); //Colored JOKER
+      }
+    }
+  }
+  
+  public void shuffle(Vector<Card> cards){
+    int num=cards.size();
+    if(num<2) return;
+    int i,a;
+    Card temp;
+    for(i=num-1;i>0;i--){
+      a = (int) (Math.random()*num);
+      temp = cards.get(i);
+      cards.set(i,cards.get(a));
+      cards.set(a,temp);
+    }
+  }
+  
+  public void discard(){
+    deck.clear();
+    draws.clear();
   }
   
   /*main*/
