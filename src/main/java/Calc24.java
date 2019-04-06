@@ -1,12 +1,12 @@
 import java.io.*;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+//@Component
 public class Calc24{
   private static final char operators[] = {'+','-','*','/'};
   private static double objective;
-  private Calculator calculator; 
 
   private Vector<Card> deck;
   private Vector<Card> draws;
@@ -70,7 +70,6 @@ public class Calc24{
   }
 
   private StringBuilder attempt(int[] weights){
-    int num_expressions;
     int i,index;
     StringBuilder solution = new StringBuilder();
 
@@ -89,8 +88,7 @@ public class Calc24{
     case 1:
       //aaaa, 4 of a kind
       solution.append(addOperators(weights[3],weights[3],weights[3],weights[3]));
-      num_expressions = 1;
-      break;
+		break;
     case 2:
       boolean flag_a = false; //true:aaab, 3 of a kind/ false: aabb, 2 pairs
       index=0;
@@ -112,7 +110,6 @@ public class Calc24{
         solution.append(addOperators(weights[1],weights[1],weights[3],weights[1]));
         solution.append(addOperators(weights[1],weights[3],weights[1],weights[1]));
         solution.append(addOperators(weights[3],weights[1],weights[1],weights[1]));
-        num_expressions = 16;
       }
       else{
         solution.append(addOperators(weights[1],weights[1],weights[3],weights[3]));
@@ -121,7 +118,6 @@ public class Calc24{
         solution.append(addOperators(weights[3],weights[1],weights[1],weights[3]));
         solution.append(addOperators(weights[3],weights[1],weights[3],weights[1]));
         solution.append(addOperators(weights[3],weights[3],weights[1],weights[1]));
-        num_expressions = 36;
       }
       break;
     case 3:
@@ -148,8 +144,7 @@ public class Calc24{
       solution.append(addOperators(weights[3],weights[1],weights[3],weights[0]));
       solution.append(addOperators(weights[3],weights[3],weights[0],weights[1]));
       solution.append(addOperators(weights[3],weights[3],weights[1],weights[0]));
-      num_expressions = 96;
-      break;
+		break;
     default:
       //abcd, no pair
       solution.append(addOperators(weights[0],weights[1],weights[2],weights[3]));
@@ -176,8 +171,7 @@ public class Calc24{
       solution.append(addOperators(weights[3],weights[1],weights[2],weights[0]));
       solution.append(addOperators(weights[3],weights[2],weights[0],weights[1]));
       solution.append(addOperators(weights[3],weights[2],weights[1],weights[0]));
-      num_expressions = 256;
-      break;
+		break;
     }
     return solution;
   }
@@ -226,8 +220,9 @@ public class Calc24{
     return true;
   }
 
-  /*constructor*/
-  public Calc24(){
+  /*run a game*/
+  //@Autowired
+  public void run(){
     Card c;
     int i;
     String solution;
@@ -307,8 +302,8 @@ public class Calc24{
     draws.clear();
   }
   
-  /*main*/
-  public static void main(String[] args){
-    Calc24 a = new Calc24();
+  public Calc24() {
+	  super();
+	  //System.out.println("Let\'s play Calc24!");
   }
 }

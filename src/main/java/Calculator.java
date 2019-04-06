@@ -4,7 +4,6 @@
 */
 
 import java.math.BigDecimal;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -36,8 +35,8 @@ public class Calculator {
     if(!matcher.matches()){
       throw new IllegalArgumentException();
     }
-    Stack<String> optStack = new Stack<>(); //stack of operators
-    Stack<BigDecimal> numStack = new Stack<>(); // stack of numbers, use BigDecimal for more precision
+    Stack<String> optStack = new Stack<String>(); //stack of operators
+    Stack<BigDecimal> numStack = new Stack<BigDecimal>(); // stack of numbers, use BigDecimal for more precision
     StringBuilder curNumBuilder = new StringBuilder(16); //building numbers with many digits
 
     for (int i = 0; i < expression.length(); i++){
@@ -133,17 +132,17 @@ public class Calculator {
   public static BigDecimal floatingPointCalc(String opt, BigDecimal bigDecimal1, 
     BigDecimal bigDecimal2) {
     BigDecimal resultBigDecimal = new BigDecimal(0);
-    switch (opt) {
-    case "+":
+    switch (opt.charAt(0)) {
+    case '+':
       resultBigDecimal = bigDecimal1.add(bigDecimal2);
       break;
-    case "-":
+    case '-':
       resultBigDecimal = bigDecimal1.subtract(bigDecimal2);
       break;
-    case "*":
+    case '*':
       resultBigDecimal = bigDecimal1.multiply(bigDecimal2);
       break;
-    case "/":
+    case '/':
       resultBigDecimal = bigDecimal1.divide(bigDecimal2, 10, BigDecimal.ROUND_HALF_DOWN);
       break;
     default:
@@ -156,10 +155,10 @@ public class Calculator {
     int priority = OPT_PRIORITY_MAP.get(opt2) - OPT_PRIORITY_MAP.get(opt1);
     return priority;
   }
-
+/*
   private static boolean isDoubleEquals (double value1, double value2) {
     System.out.println("Correct answer=" + value1 + ", Practical answer=" + value2);
     return Math.abs(value1 - value2) <= 0.0001;
-  }
+  }*/
   
 }
